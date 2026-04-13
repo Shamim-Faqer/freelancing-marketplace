@@ -21,7 +21,7 @@ function Partners() {
   return (
     <div className="px-4 md:px-8 lg:px-16">
       {/* Heading */}
-      <h2 className="text-4xl md:text-5xl font-bold text-center mt-10 mb-4">
+      <h2 className="text-4xl text-primary md:text-5xl font-bold text-center mt-10 mb-4">
         Our Partners
       </h2>
       <p className="text-center text-gray-600 mb-8">
