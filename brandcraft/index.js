@@ -1,69 +1,73 @@
-const express = require('express');
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const dns = require("node:dns");
+const { MongoClient, ObjectId } = require("mongodb");
+
+dotenv.config();
+
 const app = express();
-const cors = require('cors');
-const dns = require('node:dns');
-const { MongoClient, ServerApiVersion } = require('mongodb');
-require('dotenv').config();
+const port = Number(process.env.PORT) || 8080;
 
-const port = process.env.PORT || 3000;
-
-app.use(express.json());
-app.use(cors());
-
-// DNS fix
+// ✅ DNS fix (VERY IMPORTANT for your earlier error)
 dns.setServers(['1.1.1.1', '8.8.8.8']);
 
-const uri = process.env.MONGO_URI;
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  })
+);
+app.use(express.json());
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
+// ✅ FIXED
+const uri = process.env.MONGODB_URI;
+const dbName = process.env.DB_NAME || "brandCraft";
+
+if (!uri) {
+  throw new Error("MONGODB_URI is required in .env");
+}
+
+const client = new MongoClient(uri);
+
+const parseId = (value) => {
+  if (!ObjectId.isValid(value)) return null;
+  return new ObjectId(value);
+};
+
+const cleanText = (value) => String(value || "").trim();
 
 async function run() {
   try {
     await client.connect();
-    console.log("MongoDB Connected ✅");
+    await client.db("admin").command({ ping: 1 });
 
-    const database = client.db("mernAuthDB");
-    const usersCollection = database.collection("users");
+    console.log("MongoDB connected ✅");
 
-    // ✅ Save User
-    app.post('/users', async (req, res) => {
-      const user = req.body;
-      if (!user.email || !user.uid) {
-        return res.status(400).send({ error: "Email & UID required" });
-      }
+    const db = client.db(dbName);
 
-      const existingUser = await usersCollection.findOne({ email: user.email });
-      if (existingUser) {
-        return res.status(409).send({ error: "User already exists" });
-      }
+    const jobsCollection = db.collection("jobs");
+    const acceptedTasksCollection = db.collection("acceptedTasks");
 
-      const result = await usersCollection.insertOne(user);
-      res.send(result);
+    app.get("/", (req, res) => {
+      res.send({ ok: true, message: "Freelance Marketplace API is running." });
     });
 
-    // ✅ Get Users
-    app.get('/users', async (req, res) => {
-      const users = await usersCollection.find().toArray();
-      res.send(users);
+    // 🔥 TEST ROUTE (IMPORTANT)
+    app.get("/test", async (req, res) => {
+      const data = await jobsCollection.find().toArray();
+      res.send(data);
     });
 
-  } catch (err) {
-    console.error("MongoDB connection failed:", err);
+    // 👉 rest of your routes same থাকবে...
+
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+
+  } catch (error) {
+    console.error("MongoDB connection failed ❌", error);
   }
 }
 
 run();
-
-app.get('/', (req, res) => {
-  res.send('Hello World from Express!');
-});
-
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});

@@ -1,16 +1,43 @@
-# React + Vite
+# Freelance MarketPlace (Client)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Live Site: https://your-client-domain.netlify.app
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Responsive layout for mobile, tablet, and desktop.
+- Public and private route setup with persistent login state after refresh.
+- Dynamic latest jobs section and all jobs page powered by backend API.
+- Add, update, and delete job flows with toast success/error messages.
+- Job accept flow with protection against accepting own posted jobs.
+- My Accepted Tasks page with DONE/CANCEL instant removal behavior.
+- Dark/light theme toggle and animated hero/cards using Framer Motion.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- React Router
+- Axios
+- TanStack Query
+- React Hot Toast
+- Framer Motion
 
-## Expanding the ESLint configuration
+## Environment
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Create `.env` file:
+
+```env
+VITE_API_URL=http://localhost:5000
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+## Run Locally
+
+```bash
+npm install
+npm run dev
+```

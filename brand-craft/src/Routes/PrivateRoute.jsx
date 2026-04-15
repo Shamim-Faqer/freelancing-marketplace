@@ -1,8 +1,12 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import Spinner from "../components/Spinner";
 
-const PrivateRoute = ({ children }) => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  return user ? children : <Navigate to="/login" />;
-};
+export default function PrivateRoute({ children }) {
+  const { user, loading } = useAuth();
+  const location = useLocation();
 
-export default PrivateRoute;
+  if (loading) return <Spinner fullScreen />;
+  if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
+  return children;
+}

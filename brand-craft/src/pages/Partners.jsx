@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Partner1 from "../assets/partners/partners (1).png";
 import Partner2 from "../assets/partners/partners (2).png";
 import Partner3 from "../assets/partners/partners (3).png";
@@ -21,24 +21,24 @@ function Partners() {
   return (
     <div className="px-4 md:px-8 lg:px-16">
       {/* Heading */}
-      <h2 className="text-4xl text-primary md:text-5xl font-bold text-center mt-10 mb-4">
+      <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mt-10 mb-4">
         Our Partners
       </h2>
-      <p className="text-center text-gray-600 mb-8">
-        Here are some of our trusted partners
+      <p className="text-center text-gray-600 mb-12">
+        Trusted by leading companies worldwide
       </p>
 
-      {/* Carousel */}
-      <div className="carousel rounded-box gap-4">
+      {/* Responsive Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 place-items-center">
         {partners.map((partner, index) => (
           <div
             key={index}
-            className="carousel-item card glass shadow-md flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300"
+            className="bg-white glass rounded-xl shadow-md p-4 flex items-center justify-center hover:scale-105 transition-transform duration-300"
           >
             <img
               src={partner.src}
               alt={partner.alt}
-              className="w-32 md:w-48 lg:w-64 object-contain"
+              className="w-28 md:w-36 lg:w-44 object-contain"
             />
           </div>
         ))}
