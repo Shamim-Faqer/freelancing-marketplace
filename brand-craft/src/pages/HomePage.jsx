@@ -1,16 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import api from "../utils/api";
-import Spinner from "../components/Spinner";
-import JobCard from "../components/JobCard";
-
-// Components
-import Partners from "./Partners";
-import Services from "./Services";
-import About from "./About";
-
-// Images
+import api from "../utils/api.js";
+import Spinner from "../components/Spinner.jsx";
+import JobCard from "../components/JobCard.jsx";
+import Partners from "./Partners.jsx";
+import Services from "./Services.jsx";
+import About from "./About.jsx";
 import HeroRightImg from "../assets/heror-3.png";
 
 export default function HomePage() {

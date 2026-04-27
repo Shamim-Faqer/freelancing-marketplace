@@ -1,8 +1,8 @@
-import { useState } from "react";
+import React, { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
-import api from "../utils/api";
-import Spinner from "../components/Spinner";
-import JobCard from "../components/JobCard";
+import api from "../utils/api.js";
+import Spinner from "../components/Spinner.jsx";
+import JobCard from "../components/JobCard.jsx";
 
 export default function AllJobsPage() {
   const [sort, setSort] = useState("desc");

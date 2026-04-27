@@ -1,14 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import api from "../utils/api";
-import useAuth from "../hooks/useAuth";
-import Spinner from "../components/Spinner";
+import api from "../utils/api.js";
+import useAuth from "../hooks/useAuth.js";
+import Spinner from "../components/Spinner.jsx";
 
 export default function MyAddedJobsPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
+  // Job List fetch করা
   const { data: jobs = [], isLoading } = useQuery({
     queryKey: ["my-jobs", user?.email],
     queryFn: async () => {
@@ -17,10 +18,12 @@ export default function MyAddedJobsPage() {
     },
   });
 
+  // Delete Mutation
   const { mutate: deleteJob, isPending } = useMutation({
     mutationFn: (id) => api.delete(`/jobs/${id}?email=${user.email}`),
     onSuccess: () => {
       toast.success("Job deleted successfully.");
+      // ডেটা রিফ্রেশ করা
       queryClient.invalidateQueries({ queryKey: ["my-jobs", user.email] });
     },
     onError: (error) => toast.error(error?.response?.data?.message || "Delete failed."),
@@ -81,11 +84,11 @@ export default function MyAddedJobsPage() {
                     
                     {/* Delete Button */}
                     <button 
-                      className={`btn btn-error btn-ghost bg-error/10 hover:bg-error hover:text-white font-black uppercase text-xs transition-all ${isPending ? 'loading' : ''}`} 
+                      className="btn btn-error btn-ghost bg-error/10 hover:bg-error hover:text-white font-black uppercase text-xs transition-all" 
                       onClick={() => deleteJob(job._id)}
                       disabled={isPending}
                     >
-                      {isPending ? "..." : "Remove"}
+                      {isPending ? <span className="loading loading-spinner loading-xs"></span> : "Remove"}
                     </button>
                   </div>
                 </div>
@@ -93,7 +96,7 @@ export default function MyAddedJobsPage() {
             ))}
           </div>
         ) : (
-          /* Empty State for Professional Look */
+          /* Empty State */
           <div className="text-center py-24 bg-base-100 rounded-[3rem] shadow-inner border-2 border-dashed border-base-300">
             <h3 className="text-2xl font-black text-base-content/30 uppercase tracking-widest mb-4">You haven't posted any jobs</h3>
             <Link to="/addJob" className="btn btn-primary btn-wide font-black uppercase">Create Your First Post</Link>

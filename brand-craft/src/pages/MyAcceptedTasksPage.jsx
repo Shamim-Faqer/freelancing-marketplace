@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import api from "../utils/api";
-import useAuth from "../hooks/useAuth";
-import Spinner from "../components/Spinner";
+import api from "../utils/api.js";
+import useAuth from "../hooks/useAuth.js";
+import Spinner from "../components/Spinner.jsx";
 
 export default function MyAcceptedTasksPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
+  // ডেটা ফেচ করা
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["accepted-tasks", user?.email],
     queryFn: async () => {
@@ -16,10 +17,12 @@ export default function MyAcceptedTasksPage() {
     },
   });
 
+  // টাস্ক রিমুভ বা আপডেট করার মিউটেশন
   const { mutate: removeTask, isPending } = useMutation({
     mutationFn: (id) => api.delete(`/accepted-tasks/${id}?email=${user.email}`),
     onSuccess: () => {
       toast.success("Task updated successfully.");
+      // ডেটা আপডেট হওয়ার পর লিস্ট অটো রিফ্রেশ হবে
       queryClient.invalidateQueries({ queryKey: ["accepted-tasks", user.email] });
     },
     onError: (error) => toast.error(error?.response?.data?.message || "Operation failed."),
@@ -48,7 +51,6 @@ export default function MyAcceptedTasksPage() {
                 key={task._id} 
                 className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-300 overflow-hidden rounded-[2rem]"
               >
-                {/* Task Cover Image */}
                 <figure className="h-48 relative">
                   <img className="w-full h-full object-cover" src={task.coverImage} alt={task.title} />
                   <div className="absolute top-4 right-4">
@@ -69,22 +71,22 @@ export default function MyAcceptedTasksPage() {
                   <div className="divider opacity-50 my-0"></div>
                   
                   <div className="card-actions grid grid-cols-2 gap-3 mt-4">
-                    {/* Done Button */}
+                    {/* Mark Done Button */}
                     <button 
                       className="btn btn-primary btn-outline font-black uppercase text-xs hover:!text-white shadow-md" 
                       onClick={() => removeTask(task._id)}
                       disabled={isPending}
                     >
-                      {isPending ? "..." : "Mark Done"}
+                      {isPending ? <span className="loading loading-spinner loading-xs"></span> : "Mark Done"}
                     </button>
                     
-                    {/* Cancel Button */}
+                    {/* Cancel Task Button */}
                     <button 
                       className="btn btn-error btn-ghost bg-error/10 hover:bg-error hover:text-white font-black uppercase text-xs transition-all" 
                       onClick={() => removeTask(task._id)}
                       disabled={isPending}
                     >
-                      Cancel Task
+                      {isPending ? <span className="loading loading-spinner loading-xs"></span> : "Cancel Task"}
                     </button>
                   </div>
                 </div>
@@ -92,13 +94,7 @@ export default function MyAcceptedTasksPage() {
             ))}
           </div>
         ) : (
-          /* Empty State */
           <div className="text-center py-20 bg-base-100 rounded-[3rem] shadow-inner border-2 border-dashed border-base-300">
-            <div className="p-6 bg-base-200 inline-block rounded-full mb-4">
-               <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-               </svg>
-            </div>
             <h3 className="text-2xl font-black text-base-content/40 uppercase tracking-tighter">No tasks accepted yet</h3>
             <p className="text-base-content/50 mt-2 font-medium">Head over to the jobs page to find new opportunities.</p>
           </div>

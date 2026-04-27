@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth.js";
 
 import logo from "../assets/logo-icon-color.png";
 

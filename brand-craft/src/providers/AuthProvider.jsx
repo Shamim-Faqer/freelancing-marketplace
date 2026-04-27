@@ -9,7 +9,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import app from "../firebase/firebase.config";
+import app from "../firebase/firebase.config.js";
 
 export const AuthContext = createContext(null);
 const auth = getAuth(app);
@@ -24,30 +24,25 @@ export function AuthProvider({ children }) {
       setUser(currentUser);
       setLoading(false);
     });
-
     return () => unsubscribe();
   }, []);
 
-  const register = async ({ name, email, password, photoURL }) => {
+  const register = async ({ name, email, password, photoURL = "" }) => {
     const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);
     await updateProfile(credential.user, {
       displayName: name.trim(),
       photoURL: photoURL.trim(),
     });
-
-    // Keep state in sync immediately after profile update.
-    setUser({ ...credential.user, displayName: name.trim() });
+    setUser({ ...credential.user, displayName: name.trim(), photoURL });
     return credential;
   };
 
   const login = async ({ email, password }) => {
-    const credential = await signInWithEmailAndPassword(auth, email.trim(), password);
-    return credential;
+    return await signInWithEmailAndPassword(auth, email.trim(), password);
   };
 
   const loginWithGoogle = async () => {
-    const credential = await signInWithPopup(auth, googleProvider);
-    return credential;
+    return await signInWithPopup(auth, googleProvider);
   };
 
   const logout = async () => {
@@ -55,14 +50,7 @@ export function AuthProvider({ children }) {
   };
 
   const value = useMemo(
-    () => ({
-      user,
-      loading,
-      register,
-      login,
-      loginWithGoogle,
-      logout,
-    }),
+    () => ({ user, loading, register, login, loginWithGoogle, logout }),
     [user, loading]
   );
 

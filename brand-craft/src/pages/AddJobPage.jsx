@@ -1,128 +1,81 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import api from "../utils/api";
-import useAuth from "../hooks/useAuth";
+import api from "../utils/api.js";
+import useAuth from "../hooks/useAuth.js";
+import { useNavigate } from "react-router-dom";
 
 export default function AddJobPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (payload) => api.post("/jobs", payload),
-    onSuccess: (data) => {
-      toast.success("New job added successfully.");
+    onSuccess: () => {
+      toast.success("Job added successfully!");
+      // Job যোগ হওয়ার পর cache রিফ্রেশ করা যাতে অন্য পেজে আপডেট দেখা যায়
+      queryClient.invalidateQueries({ queryKey: ["all-jobs"] });
+      navigate("/allJobs"); // বা আপনার প্রয়োজনীয় রাউটে রিডাইরেক্ট করুন
     },
-    onError: (error) => toast.error(error?.response?.data?.message || "Failed to add job."),
+    onError: (err) => {
+      console.error(err);
+      toast.error(err?.response?.data?.message || "Failed to add job.");
+    },
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const payload = {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Auth চেক করা
+    if (!user?.email) {
+      return toast.error("You must be logged in to post a job!");
+    }
+
+    const form = e.currentTarget;
+    
+    const jobData = {
       title: form.title.value.trim(),
       postedBy: user?.displayName || "Anonymous",
+      userEmail: user?.email,
       category: form.category.value,
       summary: form.summary.value.trim(),
       coverImage: form.coverImage.value.trim(),
-      userEmail: user?.email,
+      createdAt: new Date().toISOString(), // সার্ভারে ডেট ফিল্ড থাকলে কাজে দিবে
     };
-    
-    mutate(payload, {
-      onSuccess: () => form.reset(), // শুধুমাত্র সফল হলেই ফর্ম রিসেট হবে
-    });
+
+    mutate(jobData);
+    form.reset();
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200 py-10 px-4">
-      <div className="card w-full max-w-2xl shadow-2xl bg-base-100 border border-primary/10">
-        <div className="card-body">
-          <h2 className="card-title text-3xl font-bold text-primary mb-6 justify-center">
-            Add a New Job
-          </h2>
-          
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Job Title */}
-            <div className="form-control md:col-span-2">
-              <label className="label font-semibold">Job Title</label>
-              <input 
-                name="title" 
-                type="text" 
-                placeholder="Enter job title" 
-                className="input input-bordered focus:input-primary transition-all" 
-                required 
-              />
-            </div>
-
-            {/* User Name (Read Only) */}
-            <div className="form-control">
-              <label className="label font-semibold">Posted By</label>
-              <input 
-                value={user?.displayName || ""} 
-                readOnly 
-                className="input input-bordered bg-base-200 cursor-not-allowed opacity-70" 
-              />
-            </div>
-
-            {/* Category */}
-            <div className="form-control">
-              <label className="label font-semibold">Category</label>
-              <select 
-                name="category" 
-                className="select select-bordered focus:select-primary transition-all" 
-                required
-              >
-                <option value="" disabled selected>Select Category</option>
-                <option>Web Development</option>
-                <option>Digital Marketing</option>
-                <option>Graphics Designing</option>
-                <option>Content Writing</option>
-                <option>Video Editing</option>
-              </select>
-            </div>
-
-            {/* Cover Image URL */}
-            <div className="form-control md:col-span-2">
-              <label className="label font-semibold">Cover Image URL</label>
-              <input 
-                name="coverImage" 
-                type="url" 
-                placeholder="https://example.com/image.jpg" 
-                className="input input-bordered focus:input-primary transition-all" 
-              />
-            </div>
-
-            {/* User Email (Read Only) */}
-            <div className="form-control md:col-span-2">
-              <label className="label font-semibold">Contact Email</label>
-              <input 
-                value={user?.email || ""} 
-                readOnly 
-                className="input input-bordered bg-base-200 cursor-not-allowed opacity-70" 
-              />
-            </div>
-
-            {/* Job Summary */}
-            <div className="form-control md:col-span-2">
-              <label className="label font-semibold">Job Summary</label>
-              <textarea 
-                name="summary" 
-                className="textarea textarea-bordered h-32 focus:textarea-primary transition-all" 
-                placeholder="Describe the job requirements and responsibilities..." 
-                required
-              />
-            </div>
-
-            {/* Submit Button */}
-            <div className="form-control md:col-span-2 mt-6">
-              <button 
-                className={`btn btn-primary text-white font-bold text-lg ${isPending ? 'loading' : ''}`} 
-                disabled={isPending}
-              >
-                {isPending ? "Posting Job..." : "Post This Job"}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+    <div className="p-8 bg-base-200 min-h-screen">
+      <form 
+        onSubmit={handleSubmit} 
+        className="max-w-xl mx-auto bg-base-100 p-8 shadow-xl rounded-2xl space-y-4"
+      >
+        <h2 className="text-2xl font-bold">Add New Job</h2>
+        
+        <input name="title" className="input input-bordered w-full" placeholder="Title" required />
+        
+        <select name="category" className="select select-bordered w-full" required>
+            <option value="Web Development">Web Development</option>
+            <option value="Graphics Designing">Graphics Designing</option>
+            <option value="Digital Marketing">Digital Marketing</option>
+            <option value="Content Writing">Content Writing</option>
+        </select>
+        
+        <textarea name="summary" className="textarea textarea-bordered w-full" placeholder="Summary" required />
+        
+        <input name="coverImage" className="input input-bordered w-full" placeholder="Image URL" required />
+        
+        <button 
+          type="submit"
+          disabled={isPending} 
+          className="btn btn-primary w-full text-white"
+        >
+          {isPending ? "Posting..." : "Post Job"}
+        </button>
+      </form>
     </div>
   );
 }

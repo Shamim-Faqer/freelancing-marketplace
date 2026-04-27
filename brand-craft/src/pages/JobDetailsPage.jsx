@@ -1,9 +1,9 @@
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import api from "../utils/api";
-import Spinner from "../components/Spinner";
-import useAuth from "../hooks/useAuth";
+import api from "../utils/api.js";
+import Spinner from "../components/Spinner.jsx";
+import useAuth from "../hooks/useAuth.js";
 
 export default function JobDetailsPage() {
   const { id } = useParams();
