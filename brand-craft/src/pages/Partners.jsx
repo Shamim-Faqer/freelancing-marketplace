@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import Partner1 from "../assets/partners/partners (1).png";
 import Partner2 from "../assets/partners/partners (2).png";
 import Partner3 from "../assets/partners/partners (3).png";
@@ -20,7 +20,6 @@ function Partners() {
 
   return (
     <div className="px-4 md:px-8 lg:px-16">
-      {/* Heading */}
       <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mt-10 mb-4">
         Our Partners
       </h2>
@@ -28,12 +27,11 @@ function Partners() {
         Trusted by leading companies worldwide
       </p>
 
-      {/* Responsive Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 place-items-center">
         {partners.map((partner, index) => (
           <div
             key={index}
-            className="bg-white glass rounded-xl shadow-md p-4 flex items-center justify-center hover:scale-105 transition-transform duration-300"
+            className="bg-primary-content glass rounded-xl shadow-md p-4 flex items-center justify-center hover:scale-105 transition-transform duration-300"
           >
             <img
               src={partner.src}

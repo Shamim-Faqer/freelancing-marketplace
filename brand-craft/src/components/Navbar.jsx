@@ -1,8 +1,7 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink } from 'react-router-dom';
 import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth.js";
-
-import logo from "../assets/logo-icon-color.png";
+import logoIcon from '../assets/logo-icon.png';
 
 
 
@@ -32,7 +31,6 @@ export default function Navbar() {
 
   return (
     <header className="navbar bg-primary glass text-white font-semibold shadow-lg px-4 md:px-8 sticky top-0 z-50">
-      {/* Mobile Menu (Start) */}
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -44,22 +42,20 @@ export default function Navbar() {
             {navLinks}
           </ul>
         </div>
-        <Link to="/" className="text-2xl font-black flex items-center gap-2 tracking-tighter">
-        <img src={logo} alt="" className="h-8 rounded-3xl" />
+        <Link to="/" className="text-3xl font-black flex items-center gap-2">
+          <img src={logoIcon} alt="" className="h-8 rounded-3xl" />
           Brand Craft
         </Link>
       </div>
 
-      {/* Desktop Menu (Center) */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 gap-2 font-semibold">
           {navLinks}
         </ul>
       </div>
 
-      {/* Actions (End) */}
       <div className="navbar-end gap-2">
-      
+
 
         {!user ? (
           <div className="flex gap-2">

@@ -14,7 +14,7 @@ import { FaYoutube } from "react-icons/fa";
 
 function Footer() {
   return (
-    <div><footer className="footer glass footer-horizontal footer-center bg-[#0D19A4] text-white p-10">
+    <div><footer className="footer footer-horizontal footer-center bg-primary text-white glass p-10">
   <aside>
     <img src={logoIcon} className='h-24' alt="Logo" />
     <p className="font-bold text-3xl">

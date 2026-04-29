@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { motion } from "framer-motion";
 
 export default function NotFoundPage() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center bg-base-200 px-4">
       <div className="max-w-md w-full text-center">
-        {/* Animated 404 Text */}
-        <motion.h1 
+
+        <motion.h1
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -15,8 +15,7 @@ export default function NotFoundPage() {
           404
         </motion.h1>
 
-        {/* Content Card */}
-        <motion.div 
+        <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
@@ -36,8 +35,8 @@ export default function NotFoundPage() {
 
           <div className="divider opacity-50"></div>
 
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="btn btn-primary btn-block btn-lg font-black uppercase shadow-lg shadow-primary/20 tracking-wider group"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
