@@ -54,3 +54,7 @@ async function run() {
   } catch (e) { console.error(e); }
 }
 run();
+
+
+// আপনার কোডের একদম নিচে
+module.exports = app;
